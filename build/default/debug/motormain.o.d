@@ -1,4 +1,4 @@
-build/default/production/motormain.o:  \
+build/default/debug/motormain.o:  \
 motormain.c  \
 adc.h  \
 pwm.h  \

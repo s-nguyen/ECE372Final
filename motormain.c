@@ -12,7 +12,6 @@
 #include "adc.h"
 #include "pwm.h"
 #include "timer.h"
-#include "lcd.h"
 
 _CONFIG1( JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & COE_ON & ICS_PGx1 &
     FWDTEN_OFF & WINDIS_OFF & FWPSA_PR128 & WDTPS_PS32768 )
@@ -35,7 +34,6 @@ int main(void)
     char str[9]; //Used to print to LCD
     double voltage;
     
-    initLCD();
     initPWM();
     initADC();
     initSW();
@@ -44,7 +42,8 @@ int main(void)
     ENABLE = 1;
 
     while(1){
-        RIGHTWHEEL = adcVal1;
+        LEFTWHEEL = adcVal4;
+        RIGHTWHEEL = adcVal4;
         /*switch(curState){
             case forward :
                 //Change direct here
