@@ -41,9 +41,8 @@ int main(void)
     ENABLE = 1;
 
     while(1){
-        RIGHTWHEEL = 500;
-        LEFTWHEEL = 500;
-       /* switch(curState){
+        
+        switch(curState){
             case forward:
                 //Change direct here
                 PIN6 = 0;
@@ -53,28 +52,7 @@ int main(void)
                 curState = keepRunning;
                 //curState = keepRunning;
                 break;
-            case keepRunning:
-                //T1CONbits.TON = 1;
-                RIGHTWHEEL = 750;
-                LEFTWHEEL = 750;
-                nextState = idle;
 
-//                if (timerCount == 200){
-//                    T1CONbits.TON = 0;
-//                    TMR1 = 0;
-//                    timerCount = 0;
-//                    curState = idle;
-//                }
-                break;
-            case idle:
-                //Do nothing State
-                LEFTWHEEL = 0;
-                RIGHTWHEEL = 0;
-
-                if (adcVal2 < 600 && adcVal3 < 600)
-                    nextState = forward;
-                break;
-        }/*
             case backward:
                 //Change direction here
                 PIN5 = 0; //0 for NULL not used
@@ -152,7 +130,7 @@ int main(void)
                 curState = forward;
                 break;
 
-        }*/
+        }
     }
     return 0;
 }
