@@ -1,9 +1,9 @@
 // ******************************************************************************************* //
 //Stephen Nguyen
-// File: oScope.c
-// Date: 10-1-2014
-// Authors: Garrett Vanhoy
-// Description: This shows the use of a PWM signal as well as initializing the ADC
+// File: 
+// Date: 
+// Authors: Stephen Nguyen
+// Description: Move robot
 // ******************************************************************************************* //
 #include "p24fj64ga002.h"
 #include <stdio.h>
