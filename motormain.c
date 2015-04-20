@@ -20,86 +20,130 @@ _CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & O
 // ******************************************************************************************* //
 // ******************************************************************************************* //
 typedef enum stateTypeEnum{
-    forward, idle, backward, keepRunning
+    forward, idle, backward, keepRunning, turnAround, rightTurn
 } stateType;
 
-volatile stateType curState = idle;
+volatile stateType curState = forward;
 volatile stateType nextState;
 
-volatile int done = 0;
+volatile int timerCount = 0;
 volatile int adcVal1, adcVal2, adcVal3, adcVal4 = 0;
 
 int main(void)
 {
-    char str[9]; //Used to print to LCD
-    double voltage;
     
     initPWM();
     initADC();
     initSW();
+    initTimer1();
     //Enable ON the H-bridge
     ENABLEPIN = OUTPUT;
     ENABLE = 1;
 
     while(1){
-        LEFTWHEEL = adcVal4;
-        RIGHTWHEEL = adcVal4;
-        /*switch(curState){
-            case forward :
+        RIGHTWHEEL = 500;
+        LEFTWHEEL = 500;
+       /* switch(curState){
+            case forward:
                 //Change direct here
                 PIN6 = 0;
                 PIN4 = 0;
                 PIN5 = 19;
                 PIN7 = 18;
-                nextState = idle;
                 curState = keepRunning;
+                //curState = keepRunning;
                 break;
+            case keepRunning:
+                //T1CONbits.TON = 1;
+                RIGHTWHEEL = 750;
+                LEFTWHEEL = 750;
+                nextState = idle;
+
+//                if (timerCount == 200){
+//                    T1CONbits.TON = 0;
+//                    TMR1 = 0;
+//                    timerCount = 0;
+//                    curState = idle;
+//                }
+                break;
+            case idle:
+                //Do nothing State
+                LEFTWHEEL = 0;
+                RIGHTWHEEL = 0;
+
+                if (adcVal2 < 600 && adcVal3 < 600)
+                    nextState = forward;
+                break;
+        }/*
             case backward:
                 //Change direction here
                 PIN5 = 0; //0 for NULL not used
                 PIN7 = 0; 
                 PIN6 = 18; //Pin 6 is maped to OC1 control left wheel
                 PIN4 = 19; //Pin 4 is mapped to OC2 Control Right wheel
-                nextState = idle;
                 curState = keepRunning;
+                break;
+            case turnAround:
+                PIN4 = 19;
+                PIN5 = 0;
+                PIN6 = 0;
+                PIN7 = 18;
+                RIGHTWHEEL = 500;
+                LEFTWHEEL = 500;
+                T1CONbits.TON = 1;
+
+                if (timerCount == 10){
+                    T1CONbits.TON = 0;
+                    timerCount = 0;
+                    curState = idle; //just for testing: should be forward
+                }
+                break;
+            case rightTurn:
+                RIGHTWHEEL = 0;
+                LEFTWHEEL = 1023;
+                T1CONbits.TON = 1;
+
+                if (timerCount == 5){
+                    T1CONbits.TON = 0;
+                    timerCount = 0;
+                    curState = idle; //just for testing: should be forward
+                }
                 break;
             case idle:
                 //Do nothing State
                 LEFTWHEEL = 0;
                 RIGHTWHEEL = 0;
-                nextState = backward;
+                nextState = forward;
                 break;
             case keepRunning:
                 //All Detect
-                if (adcVal1 < 300 && adcVal2 < 300 && adcVal3 < 300 && adcVal4 < 300){
-                    //Figure out what to do. Could default to 180 for first iteration
-                    //Need a counter to detect two in a row
-                    //But if sampling is too fast it will detect the same band as 2-2923 in a row
+                if (adcVal1 < 650 && adcVal2 < 650 && adcVal3 < 650 && adcVal4 < 650){
+                    curState = turnAround;
                 }
                 //Middle Two are On Line
-                else if (adcVal2 < 300 && adcVal3 < 300){
+                else if (adcVal2 < 650 && adcVal3 < 650){
                     //Go Striaght
                     RIGHTWHEEL = 1023;
                     LEFTWHEEL = 1023;
                 }
                 //2 Detects but 3 doesn't
-                else if (adcVal2 < 300 && adcVal3 > 700){
+                else if (adcVal2 < 650 && adcVal3 > 700){
                     RIGHTWHEEL = 800;
                     LEFTWHEEL = 1023;
                 }
                 //3 Detects but 2 doesn't
-                else if (adcVal3 < 300 && adcVal2 > 700){
+                else if (adcVal3 < 650 && adcVal2 > 700){
                     RIGHTWHEEL = 1023;
                     LEFTWHEEL = 800;
                 }
-                else if (adcVal1 < 300){
-                    //LEFT TURN
+                else if (adcVal1 < 650){
+                    //ignore Left turn for now
                 }
-                else if (adcVal4 < 300){
-                    //RIGHT TURN
+                else if (adcVal4 < 650){
+                    curState = rightTurn;
                 }
                 else{
-                    //curState = backward; //Default to go backwards to find line
+                    curState = backward; //Default to go backwards to find line
                     LEFTWHEEL = 1023;   //Middle should have both on max
                     RIGHTWHEEL = 1023;
                 }
@@ -107,6 +151,7 @@ int main(void)
             default:
                 curState = forward;
                 break;
+
         }*/
     }
     return 0;
@@ -126,5 +171,13 @@ void _ISR _CNInterrupt(void){
     if(PORTBbits.RB5 == 1){
         curState = nextState;
     }
+}
+
+// ******************************************************************************************* //
+
+void _ISR _T1Interrupt(void){
+    //Put down the timer 1 flag first!
+    IFS0bits.T1IF = 0;
+    timerCount = timerCount + 1;
 
 }

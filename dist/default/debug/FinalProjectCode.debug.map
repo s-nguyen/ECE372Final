@@ -25,11 +25,11 @@ Command:
   build/default/debug/pwm.o \
   build/default/debug/timer.o \
   build/default/debug/motormain.o \
-  -T/tmp/tmp00004938.00 \
-  -T/tmp/tmp00004938.01 \
-  -T/tmp/tmp00004938.02 \
-  -T/tmp/tmp00004938.03 \
-  -T/tmp/tmp00004938.04 \
+  -T/tmp/tmp00005431.00 \
+  -T/tmp/tmp00005431.01 \
+  -T/tmp/tmp00005431.02 \
+  -T/tmp/tmp00005431.03 \
+  -T/tmp/tmp00005431.04 \
   --defsym=__MPLAB_BUILD=1 \
   --defsym=__MPLAB_DEBUG=1 \
   --defsym=__DEBUG=1 \
@@ -92,11 +92,11 @@ section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0xc1c          0x122a  (4650)
 .const                       0xe1c                0x10            0x18  (24)
-.text                        0xe2c               0x112           0x19b  (411)
-.dinit                       0xf3e                0xe4           0x156  (342)
-.text                       0x1022               0x120           0x1b0  (432)
+.text                        0xe2c               0x110           0x198  (408)
+.dinit                       0xf3c                0xe4           0x156  (342)
+.text                       0x1020               0x196           0x261  (609)
 
-                     Total program memory used (bytes):         0x16e3  (5859) 8%
+                     Total program memory used (bytes):         0x1791  (6033) 9%
 
 
 Data Memory  [Origin = 0x800, Length = 0x2000]
@@ -135,7 +135,7 @@ stack                        0x956                              0x1eaa  (7850)
 External Symbols in Data Memory (by address):
 
                     0x0850                  _nextState
-                    0x0852                  _done
+                    0x0852                  _timerCount
                     0x0854                  _adcVal1
                     0x0856                  _adcVal2
                     0x0858                  _adcVal3
@@ -161,22 +161,22 @@ External Symbols in Data Memory (by name):
                     0x0858                  _adcVal3
                     0x085a                  _adcVal4
                     0x085c                  _curState
-                    0x0852                  _done
                     0x0850                  _nextState
+                    0x0852                  _timerCount
 
 External Symbols in Program Memory (by address):
 
                   0x000200                  __resetPRI
                   0x00022c                  __psv_init
-                  0x00023c                  __data_init_standard
                   0x00023c                  __data_init
+                  0x00023c                  __data_init_standard
                   0x00029a                  __DefaultInterrupt
                   0x0002fe                  __sprintf_cdnopuxX
                   0x00032a                  __vfprintf_cdnopuxX
                   0x000b32                  ___udivsi3
                   0x000b52                  ___mulp32peds3
-                  0x000b52                  ___mulsi3
                   0x000b52                  ___mulp32eds3
+                  0x000b52                  ___mulsi3
                   0x000bd0                  ___udivmoddi3
                   0x000cb4                  ___udivdi3
                   0x000cc2                  ___umoddi3
@@ -189,18 +189,20 @@ External Symbols in Program Memory (by address):
                   0x000e92                  _delay5ms
                   0x000eba                  _getTimedString
                   0x000f14                  _initTimer1
-                  0x000f30                  _initSW
-                  0x001022                  _initADC
-                  0x001092                  _main
-                  0x0010a8                  __ADC1Interrupt
-                  0x0010cc                  __CNInterrupt
-                  0x0010ee                  _initPWM
+                  0x000f2e                  _initSW
+                  0x001020                  _main
+                  0x0010a2                  __ADC1Interrupt
+                  0x0010c6                  __CNInterrupt
+                  0x0010e8                  __T1Interrupt
+                  0x001102                  _initADC
+                  0x001162                  _initPWM
 
 External Symbols in Program Memory (by name):
 
-                  0x0010a8                  __ADC1Interrupt
-                  0x0010cc                  __CNInterrupt
+                  0x0010a2                  __ADC1Interrupt
+                  0x0010c6                  __CNInterrupt
                   0x00029a                  __DefaultInterrupt
+                  0x0010e8                  __T1Interrupt
                   0x000cca                  ___divdi3
                   0x000d2a                  ___moddi3
                   0x000d86                  ___muldi3
@@ -222,11 +224,11 @@ External Symbols in Program Memory (by name):
                   0x000e5c                  _delayS
                   0x000e2c                  _delayUs
                   0x000eba                  _getTimedString
-                  0x001022                  _initADC
-                  0x0010ee                  _initPWM
-                  0x000f30                  _initSW
+                  0x001102                  _initADC
+                  0x001162                  _initPWM
+                  0x000f2e                  _initSW
                   0x000f14                  _initTimer1
-                  0x001092                  _main
+                  0x001020                  _main
 
 Memory Configuration
 
@@ -370,41 +372,41 @@ __CONFIG1         0x00abfe          0x2
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x2a2f
+.debug_info       0x000000       0x2a62
  *(.debug_info)
- .debug_info      0x000000        0xc1f build/default/debug/adc.o
- .debug_info      0x000c1f        0x745 build/default/debug/pwm.o
- .debug_info      0x001364        0xc15 build/default/debug/timer.o
- .debug_info      0x001f79        0xab6 build/default/debug/motormain.o
+ .debug_info      0x000000        0x847 build/default/debug/adc.o
+ .debug_info      0x000847        0x745 build/default/debug/pwm.o
+ .debug_info      0x000f8c        0xc15 build/default/debug/timer.o
+ .debug_info      0x001ba1        0xec1 build/default/debug/motormain.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x457
+.debug_abbrev     0x000000        0x451
  *(.debug_abbrev)
  .debug_abbrev    0x000000         0xf8 build/default/debug/adc.o
  .debug_abbrev    0x0000f8         0xb6 build/default/debug/pwm.o
  .debug_abbrev    0x0001ae        0x136 build/default/debug/timer.o
- .debug_abbrev    0x0002e4        0x173 build/default/debug/motormain.o
+ .debug_abbrev    0x0002e4        0x16d build/default/debug/motormain.o
 
-.debug_line       0x000000        0x622
+.debug_line       0x000000        0x69f
  *(.debug_line)
- .debug_line      0x000000        0x173 build/default/debug/adc.o
- .debug_line      0x000173        0x10b build/default/debug/pwm.o
- .debug_line      0x00027e        0x257 build/default/debug/timer.o
- .debug_line      0x0004d5        0x14d build/default/debug/motormain.o
+ .debug_line      0x000000        0x123 build/default/debug/adc.o
+ .debug_line      0x000123        0x10b build/default/debug/pwm.o
+ .debug_line      0x00022e        0x24f build/default/debug/timer.o
+ .debug_line      0x00047d        0x222 build/default/debug/motormain.o
 
-.debug_frame      0x000000        0x12c
+.debug_frame      0x000000        0x13c
  *(.debug_frame)
  .debug_frame     0x000000         0x24 build/default/debug/adc.o
  .debug_frame     0x000024         0x24 build/default/debug/pwm.o
  .debug_frame     0x000048         0xa0 build/default/debug/timer.o
- .debug_frame     0x0000e8         0x44 build/default/debug/motormain.o
+ .debug_frame     0x0000e8         0x54 build/default/debug/motormain.o
 
-.debug_str        0x000000        0x13e
+.debug_str        0x000000        0x145
  *(.debug_str)
- .debug_str       0x000000         0x58 build/default/debug/adc.o
- .debug_str       0x000058         0x34 build/default/debug/pwm.o
- .debug_str       0x00008c         0x4c build/default/debug/timer.o
- .debug_str       0x0000d8         0x66 build/default/debug/motormain.o
+ .debug_str       0x000000         0x36 build/default/debug/adc.o
+ .debug_str       0x000036         0x34 build/default/debug/pwm.o
+ .debug_str       0x00006a         0x4c build/default/debug/timer.o
+ .debug_str       0x0000b6         0x8f build/default/debug/motormain.o
 
 .debug_loc
  *(.debug_loc)
@@ -413,7 +415,7 @@ __CONFIG1         0x00abfe          0x2
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000        0x14c
+                  0x000000        0x163
  *(.debug_pubnames)
  .debug_pubnames
                   0x000000         0x1e build/default/debug/adc.o
@@ -422,7 +424,7 @@ __CONFIG1         0x00abfe          0x2
  .debug_pubnames
                   0x00003c         0x63 build/default/debug/timer.o
  .debug_pubnames
-                  0x00009f         0xad build/default/debug/motormain.o
+                  0x00009f         0xc4 build/default/debug/motormain.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -450,7 +452,7 @@ __CONFIG1         0x00abfe          0x2
                   0x000014          0x4 LONG 0x29a DEFINED (__INT0Interrupt)?ABSOLUTE (__INT0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000016          0x4 LONG 0x29a DEFINED (__IC1Interrupt)?ABSOLUTE (__IC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000018          0x4 LONG 0x29a DEFINED (__OC1Interrupt)?ABSOLUTE (__OC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00001a          0x4 LONG 0x29a DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00001a          0x4 LONG 0x10e8 DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00001c          0x4 LONG 0x29a DEFINED (__Interrupt4)?ABSOLUTE (__Interrupt4):ABSOLUTE (__DefaultInterrupt)
                   0x00001e          0x4 LONG 0x29a DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000020          0x4 LONG 0x29a DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -460,13 +462,13 @@ __CONFIG1         0x00abfe          0x2
                   0x000028          0x4 LONG 0x29a DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00002a          0x4 LONG 0x29a DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00002c          0x4 LONG 0x29a DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00002e          0x4 LONG 0x10a8 DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00002e          0x4 LONG 0x10a2 DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000030          0x4 LONG 0x29a DEFINED (__Interrupt14)?ABSOLUTE (__Interrupt14):ABSOLUTE (__DefaultInterrupt)
                   0x000032          0x4 LONG 0x29a DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000034          0x4 LONG 0x29a DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000036          0x4 LONG 0x29a DEFINED (__MI2C1Interrupt)?ABSOLUTE (__MI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000038          0x4 LONG 0x29a DEFINED (__CompInterrupt)?ABSOLUTE (__CompInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00003a          0x4 LONG 0x10cc DEFINED (__CNInterrupt)?ABSOLUTE (__CNInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00003a          0x4 LONG 0x10c6 DEFINED (__CNInterrupt)?ABSOLUTE (__CNInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00003c          0x4 LONG 0x29a DEFINED (__INT1Interrupt)?ABSOLUTE (__INT1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00003e          0x4 LONG 0x29a DEFINED (__Interrupt21)?ABSOLUTE (__Interrupt21):ABSOLUTE (__DefaultInterrupt)
                   0x000040          0x4 LONG 0x29a DEFINED (__Interrupt22)?ABSOLUTE (__Interrupt22):ABSOLUTE (__DefaultInterrupt)
@@ -578,7 +580,7 @@ __CONFIG1         0x00abfe          0x2
                   0x000114          0x4 LONG 0x29a DEFINED (__AltINT0Interrupt)?ABSOLUTE (__AltINT0Interrupt):DEFINED (__INT0Interrupt)?ABSOLUTE (__INT0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000116          0x4 LONG 0x29a DEFINED (__AltIC1Interrupt)?ABSOLUTE (__AltIC1Interrupt):DEFINED (__IC1Interrupt)?ABSOLUTE (__IC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000118          0x4 LONG 0x29a DEFINED (__AltOC1Interrupt)?ABSOLUTE (__AltOC1Interrupt):DEFINED (__OC1Interrupt)?ABSOLUTE (__OC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00011a          0x4 LONG 0x29a DEFINED (__AltT1Interrupt)?ABSOLUTE (__AltT1Interrupt):DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00011a          0x4 LONG 0x10e8 DEFINED (__AltT1Interrupt)?ABSOLUTE (__AltT1Interrupt):DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00011c          0x4 LONG 0x29a DEFINED (__AltInterrupt4)?ABSOLUTE (__AltInterrupt4):DEFINED (__Interrupt4)?ABSOLUTE (__Interrupt4):ABSOLUTE (__DefaultInterrupt)
                   0x00011e          0x4 LONG 0x29a DEFINED (__AltIC2Interrupt)?ABSOLUTE (__AltIC2Interrupt):DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000120          0x4 LONG 0x29a DEFINED (__AltOC2Interrupt)?ABSOLUTE (__AltOC2Interrupt):DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -588,13 +590,13 @@ __CONFIG1         0x00abfe          0x2
                   0x000128          0x4 LONG 0x29a DEFINED (__AltSPI1Interrupt)?ABSOLUTE (__AltSPI1Interrupt):DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00012a          0x4 LONG 0x29a DEFINED (__AltU1RXInterrupt)?ABSOLUTE (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00012c          0x4 LONG 0x29a DEFINED (__AltU1TXInterrupt)?ABSOLUTE (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00012e          0x4 LONG 0x10a8 DEFINED (__AltADC1Interrupt)?ABSOLUTE (__AltADC1Interrupt):DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00012e          0x4 LONG 0x10a2 DEFINED (__AltADC1Interrupt)?ABSOLUTE (__AltADC1Interrupt):DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000130          0x4 LONG 0x29a DEFINED (__AltInterrupt14)?ABSOLUTE (__AltInterrupt14):DEFINED (__Interrupt14)?ABSOLUTE (__Interrupt14):ABSOLUTE (__DefaultInterrupt)
                   0x000132          0x4 LONG 0x29a DEFINED (__AltInterrupt15)?ABSOLUTE (__AltInterrupt15):DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000134          0x4 LONG 0x29a DEFINED (__AltSI2C1Interrupt)?ABSOLUTE (__AltSI2C1Interrupt):DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000136          0x4 LONG 0x29a DEFINED (__AltMI2C1Interrupt)?ABSOLUTE (__AltMI2C1Interrupt):DEFINED (__MI2C1Interrupt)?ABSOLUTE (__MI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000138          0x4 LONG 0x29a DEFINED (__AltCompInterrupt)?ABSOLUTE (__AltCompInterrupt):DEFINED (__CompInterrupt)?ABSOLUTE (__CompInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00013a          0x4 LONG 0x10cc DEFINED (__AltCNInterrupt)?ABSOLUTE (__AltCNInterrupt):DEFINED (__CNInterrupt)?ABSOLUTE (__CNInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00013a          0x4 LONG 0x10c6 DEFINED (__AltCNInterrupt)?ABSOLUTE (__AltCNInterrupt):DEFINED (__CNInterrupt)?ABSOLUTE (__CNInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00013c          0x4 LONG 0x29a DEFINED (__AltINT1Interrupt)?ABSOLUTE (__AltINT1Interrupt):DEFINED (__INT1Interrupt)?ABSOLUTE (__INT1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00013e          0x4 LONG 0x29a DEFINED (__AltInterrupt21)?ABSOLUTE (__AltInterrupt21):DEFINED (__Interrupt21)?ABSOLUTE (__Interrupt21):ABSOLUTE (__DefaultInterrupt)
                   0x000140          0x4 LONG 0x29a DEFINED (__AltInterrupt22)?ABSOLUTE (__AltInterrupt22):DEFINED (__Interrupt22)?ABSOLUTE (__Interrupt22):ABSOLUTE (__DefaultInterrupt)
@@ -1279,59 +1281,59 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x000060        0x394
+                  0x000060        0x38c
  .debug_pubtypes
-                  0x000060        0x11a build/default/debug/adc.o
+                  0x000060         0xb5 build/default/debug/adc.o
  .debug_pubtypes
-                  0x00017a         0xb1 build/default/debug/pwm.o
+                  0x000115         0xb1 build/default/debug/pwm.o
  .debug_pubtypes
-                  0x00022b        0x102 build/default/debug/timer.o
+                  0x0001c6        0x102 build/default/debug/timer.o
  .debug_pubtypes
-                  0x00032d         0xc7 build/default/debug/motormain.o
+                  0x0002c8        0x124 build/default/debug/motormain.o
 
 __c30_signature
-                  0x0003f4         0x6c
+                  0x0003ec         0x6c
  __c30_signature
-                  0x0003f4          0x6 build/default/debug/adc.o
+                  0x0003ec          0x6 build/default/debug/adc.o
  __c30_signature
-                  0x0003fa          0x6 build/default/debug/pwm.o
+                  0x0003f2          0x6 build/default/debug/pwm.o
  __c30_signature
-                  0x000400          0x6 build/default/debug/timer.o
+                  0x0003f8          0x6 build/default/debug/timer.o
  __c30_signature
-                  0x000406          0x6 build/default/debug/motormain.o
+                  0x0003fe          0x6 build/default/debug/motormain.o
  __c30_signature
-                  0x00040c          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libpic30-elf.a(crt0_standard.o)
+                  0x000404          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libpic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x000412          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libpic30-elf.a(data_init_standard.o)
+                  0x00040a          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libpic30-elf.a(data_init_standard.o)
  __c30_signature
-                  0x000418          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(sprintf_cdnopuxX.XXeo)
+                  0x000410          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(sprintf_cdnopuxX.XXeo)
  __c30_signature
-                  0x00041e          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(doprnt_cdnopuxX.XXeo)
+                  0x000416          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(doprnt_cdnopuxX.XXeo)
  __c30_signature
-                  0x000424          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(fputc.eo)
+                  0x00041c          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(fputc.eo)
  __c30_signature
-                  0x00042a          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(_iob.eo)
+                  0x000422          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(_iob.eo)
  __c30_signature
-                  0x000430          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(flsbuf.eo)
+                  0x000428          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libc-elf.a(flsbuf.eo)
  __c30_signature
-                  0x000436          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libpic30-elf.a(write.eo)
+                  0x00042e          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libpic30-elf.a(write.eo)
  __c30_signature
-                  0x00043c          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libpic30-elf.a(c30_uart.eo)
+                  0x000434          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libpic30-elf.a(c30_uart.eo)
  __c30_signature
-                  0x000442          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(udivsi3.eo)
+                  0x00043a          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(udivsi3.eo)
  __c30_signature
-                  0x000448          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(mulsi3.eo)
+                  0x000440          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(mulsi3.eo)
  __c30_signature
-                  0x00044e          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(divmoddi3.eo)
+                  0x000446          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(divmoddi3.eo)
  __c30_signature
-                  0x000454          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(muldi3.eo)
+                  0x00044c          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(muldi3.eo)
  __c30_signature
-                  0x00045a          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(umuldi3.eo)
+                  0x000452          0x6 /Applications/microchip/xc16/v1.24/bin/bin/../../lib/libm-elf.a(umuldi3.eo)
 
 .nbss               0x0850          0xc
  .nbss              0x0850          0xc build/default/debug/motormain.o
                     0x0850                  _nextState
-                    0x0852                  _done
+                    0x0852                  _timerCount
                     0x0854                  _adcVal1
                     0x0856                  _adcVal2
                     0x0858                  _adcVal3
@@ -1376,24 +1378,25 @@ __c30_signature
 .const              0x8e1c         0x10 load address 0x000e1c  
  .const             0x8e1c         0x10 build/default/debug/timer.o
 
-.text             0x000e2c        0x112
- .text            0x000e2c        0x112 build/default/debug/timer.o
+.text             0x000e2c        0x110
+ .text            0x000e2c        0x110 build/default/debug/timer.o
                   0x000e2c                  _delayUs
                   0x000e5c                  _delayS
                   0x000e92                  _delay5ms
                   0x000eba                  _getTimedString
                   0x000f14                  _initTimer1
-                  0x000f30                  _initSW
+                  0x000f2e                  _initSW
 
-.dinit            0x000f3e         0xe4
- .dinit           0x000f3e         0xe4 data_init
+.dinit            0x000f3c         0xe4
+ .dinit           0x000f3c         0xe4 data_init
 
-.text             0x001022        0x120
- .text            0x001022         0x70 build/default/debug/adc.o
-                  0x001022                  _initADC
- .text            0x001092         0x5c build/default/debug/motormain.o
-                  0x001092                  _main
-                  0x0010a8                  __ADC1Interrupt
-                  0x0010cc                  __CNInterrupt
- .text            0x0010ee         0x54 build/default/debug/pwm.o
-                  0x0010ee                  _initPWM
+.text             0x001020        0x196
+ .text            0x001020         0xe2 build/default/debug/motormain.o
+                  0x001020                  _main
+                  0x0010a2                  __ADC1Interrupt
+                  0x0010c6                  __CNInterrupt
+                  0x0010e8                  __T1Interrupt
+ .text            0x001102         0x60 build/default/debug/adc.o
+                  0x001102                  _initADC
+ .text            0x001162         0x54 build/default/debug/pwm.o
+                  0x001162                  _initPWM
