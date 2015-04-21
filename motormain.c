@@ -1,5 +1,5 @@
 // ******************************************************************************************* //
-//Stephen Nguyen
+//Stephen Nguyen & Brett Spradling
 // File: 
 // Date: 
 // Authors: Stephen Nguyen
@@ -23,7 +23,7 @@ typedef enum stateTypeEnum{
     forward, idle, backward, keepRunning, turnAround, rightTurn
 } stateType;
 
-volatile stateType curState = forward;
+volatile stateType curState = idle;
 volatile stateType nextState;
 
 volatile int timerCount = 0;
@@ -53,7 +53,7 @@ int main(void)
                 //curState = keepRunning;
                 break;
 
-            case backward:
+          /*  case backward:
                 //Change direction here
                 PIN5 = 0; //0 for NULL not used
                 PIN7 = 0; 
@@ -86,7 +86,7 @@ int main(void)
                     timerCount = 0;
                     curState = idle; //just for testing: should be forward
                 }
-                break;
+                break;*/
             case idle:
                 //Do nothing State
                 LEFTWHEEL = 0;
@@ -95,39 +95,39 @@ int main(void)
                 break;
             case keepRunning:
                 //All Detect
-                if (adcVal1 < 650 && adcVal2 < 650 && adcVal3 < 650 && adcVal4 < 650){
+               /* if (adcVal1 < 650 && adcVal2 < 650 && adcVal3 < 650 && adcVal4 < 650){
                     curState = turnAround;
-                }
+                }*/
                 //Middle Two are On Line
-                else if (adcVal2 < 650 && adcVal3 < 650){
+                if (adcVal2 < 650 && adcVal3 < 650){
                     //Go Striaght
-                    RIGHTWHEEL = 1023;
-                    LEFTWHEEL = 1023;
+                    RIGHTWHEEL = 700;
+                    LEFTWHEEL = 700;
                 }
                 //2 Detects but 3 doesn't
-                else if (adcVal2 < 650 && adcVal3 > 700){
-                    RIGHTWHEEL = 800;
-                    LEFTWHEEL = 1023;
+                else if (adcVal3 > 700){
+                    RIGHTWHEEL = 500;
+                    LEFTWHEEL = 700;
                 }
                 //3 Detects but 2 doesn't
-                else if (adcVal3 < 650 && adcVal2 > 700){
-                    RIGHTWHEEL = 1023;
-                    LEFTWHEEL = 800;
+                else if (adcVal2 > 700){
+                    RIGHTWHEEL = 700;
+                    LEFTWHEEL = 500;
                 }
-                else if (adcVal1 < 650){
-                    //ignore Left turn for now
-                }
-                else if (adcVal4 < 650){
-                    curState = rightTurn;
-                }
-                else{
-                    curState = backward; //Default to go backwards to find line
-                    LEFTWHEEL = 1023;   //Middle should have both on max
-                    RIGHTWHEEL = 1023;
-                }
+//                else if (adcVal1 < 650){
+//                    //ignore Left turn for now
+//                }
+//                else if (adcVal4 < 650){
+//                    curState = rightTurn;
+//                }
+//                else{
+//                    curState = backward; //Default to go backwards to find line
+//                    LEFTWHEEL = 500;   //Middle should have both on max
+//                    RIGHTWHEEL = 500;
+//                }
                 break;
             default:
-                curState = forward;
+                curState = idle;
                 break;
 
         }
