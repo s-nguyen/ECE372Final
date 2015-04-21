@@ -4,7 +4,7 @@
 
 void initPWM(){
 
-    T3CONbits.TCKPS = 1;
+    T3CONbits.TCKPS = 0; //Fixed
     TMR3 = 0;
     PR3 = 1023; //Timing is not important?
     
