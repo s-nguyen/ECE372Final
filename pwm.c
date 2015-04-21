@@ -6,7 +6,7 @@ void initPWM(){
 
     T3CONbits.TCKPS = 0; //Fixed
     TMR3 = 0;
-    PR3 = 1023; //Timing is not important?
+    PR3 = 10000; //Timing is not important?
     
 
     OC1CONbits.OCTSEL = 1; //Using Timer 3

@@ -101,19 +101,31 @@ int main(void)
                 //Middle Two are On Line
                 if (adcVal2 < 650 && adcVal3 < 650){
                     //Go Striaght
-                    RIGHTWHEEL = 700;
-                    LEFTWHEEL = 700;
+                    RIGHTWHEEL = 10000;
+                    LEFTWHEEL = 10000;
+                }
+                else if(adcVal2 > 650){
+                    LEFTWHEEL = 8000;
+                    RIGHTWHEEL = 6000;
+                }
+                else if(adcVal3 > 650){
+                    LEFTWHEEL = 6000;
+                    RIGHTWHEEL = 8000;
+                }
+                else{
+                    RIGHTWHEEL = 0;
+                    LEFTWHEEL = 0;
                 }
                 //2 Detects but 3 doesn't
-                else if (adcVal3 > 700){
-                    RIGHTWHEEL = 500;
-                    LEFTWHEEL = 700;
-                }
-                //3 Detects but 2 doesn't
-                else if (adcVal2 > 700){
-                    RIGHTWHEEL = 700;
-                    LEFTWHEEL = 500;
-                }
+//                else if (adcVal3 > 700){
+//                    RIGHTWHEEL = 900;
+//                    LEFTWHEEL = 1000;
+//                }
+//                //3 Detects but 2 doesn't
+//                else if (adcVal2 > 700){
+//                    RIGHTWHEEL = 1000;
+//                    LEFTWHEEL = 900;
+//                }
 //                else if (adcVal1 < 650){
 //                    //ignore Left turn for now
 //                }
