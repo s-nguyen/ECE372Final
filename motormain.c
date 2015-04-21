@@ -150,10 +150,19 @@ int main(void)
 void _ISR _ADC1Interrupt(void){
 
     IFS0bits.AD1IF = 0;
-    adcVal1 = ADC1BUF0;        //Read from one buffer from ADC
-    adcVal2 = ADC1BUF1;        //Read from ADC for 2nd transistor
-    adcVal3 = ADC1BUF2;        //Read from ADC for 3rd transistor
-    adcVal4 = ADC1BUF3;        //Read from ADC for 4th transistor
+    int i = 0;
+    adcVal1 = 0; 
+    adcVal2 = 0;
+    adcVal3 = 0; 
+    adcVal4 = 0;
+    unsigned int *adcPtr = (unsigned int *) (&ADC1BUF0);
+
+    for (i = 0; i < 16; i += 4){
+        adcVal1 = adcVal1 + *adcPtr/4;        //Read from one buffer from ADC
+        adcVal2 = adcVal2 + (*adcPtr + 1)/4;  //Read from ADC for 2nd transistor
+        adcVal3 = adcVal3 + (*adcPtr + 2)/4;  //Read from ADC for 3rd transistor
+        adcVal4 = adcVal4 + (*adcPtr + 3)/4; //Read from ADC for 4th transistor
+    }
 }
 // ******************************************************************************************* //
 void _ISR _CNInterrupt(void){
