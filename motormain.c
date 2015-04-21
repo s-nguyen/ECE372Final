@@ -36,16 +36,13 @@ int main(void)
     initADC();
     initSW();
     initTimer1();
-    initUART();
+
     //Enable ON the H-bridge
     ENABLEPIN = OUTPUT;
     ENABLE = 1;
 
     while(1){
-        printf("%d", adcVal1);
-        printf("%d", adcVal2);
-        printf("%d", adcVal3);
-        printf("%d", adcVal4);
+      
         switch(curState){
             case forward:
                 //Change direct here
