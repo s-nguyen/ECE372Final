@@ -20,19 +20,21 @@ _CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & O
 // ******************************************************************************************* //
 // ******************************************************************************************* //
 typedef enum stateTypeEnum{
-    forward, idle, 
-            scan, check, moveForward, moveRight, moveLeft, findLine
+    forward, changeTires, idle,
+            scan, check, moveForward, moveRight, moveLeft, findLine, turnAround
 } stateType;
 
 volatile stateType curState = idle;
 volatile stateType nextState;
+volatile stateType prevState;
 
 volatile int timerCount = 0;
 volatile int adcVal1, adcVal2, adcVal3, adcVal4 = 0;
 
 int main(void)
 {
-    
+    int delay = 0;
+    int didTurnAround = 0;
     initPWM();
     initADC();
     initSW();
@@ -49,17 +51,26 @@ int main(void)
                 //Do nothing State
                 LEFTWHEEL = 0;
                 RIGHTWHEEL = 0;
+                prevState = idle;
                 nextState = forward;
                 break;
             case forward:
                 //Change direct here
-                PIN6 = 0;
+                PIN6 = 0; //pIn 5 and 7 is forward, Pin4 and 6 is backwards
                 PIN4 = 0;
                 PIN5 = 19;
                 PIN7 = 18;
+                prevState = forward;
                 curState = scan;
                 //curState = keepRunning;
-                break;         
+                break;
+            case changeTires:
+                PIN4 = 0;
+                PIN5 = 19;
+                PIN6 = 18;
+                PIN7 = 0;
+                curState = turnAround;
+                break;
             case scan:
                 //All Detect
                 AD1CON1bits.SAMP = 1;
@@ -68,7 +79,13 @@ int main(void)
                 }
                 break;
             case check:
-                if(adcVal2 <= 600 && adcVal3 <= 600){
+                if (adcVal1 <= 600 && adcVal2 <= 600 && adcVal3 <= 600 && adcVal4 <= 600 && didTurnAround == 0){ //All detecting
+                    delay = 1;
+                    didTurnAround = 1;
+                    curState = changeTires;
+                }
+
+                else if(adcVal2 <= 600 && adcVal3 <= 600){
                     curState = moveForward;
                 }
                 else if(adcVal2 > 600 && adcVal3 <=600){
@@ -76,30 +93,57 @@ int main(void)
                 }
                 else if(adcVal3 > 600 && adcVal2 <= 600){
                     curState = moveLeft;
-                }else {
+                }
+                else {
                     curState = findLine;
                 }
-                
                 break;
             case moveForward:
-                RIGHTWHEEL = 1000;
-                LEFTWHEEL = 1000;
-                curState = scan;
+                RIGHTWHEEL = 500; //1000;
+                LEFTWHEEL = 500; //1000;
+                curState = forward;
                 break;
             case moveRight:
-                RIGHTWHEEL = 0;
-                LEFTWHEEL = 800;
-                curState = scan;
+                RIGHTWHEEL = 0; //500
+                LEFTWHEEL = 500;  //1000
+                curState = forward;
                 break;
             case moveLeft:
-                RIGHTWHEEL = 800;
-                LEFTWHEEL = 0;
-                curState = scan;
+                RIGHTWHEEL = 500; //800
+                LEFTWHEEL = 0;  //500
+                curState = forward;
+                break;
+            case turnAround:
+                RIGHTWHEEL = 500; //1000
+                LEFTWHEEL = 500;
+                //Can add in function
+                if(delay == 1){
+                    delayS(1);
+                    delay = 0;
+                }
+                checkSensor();
+                if(adcVal2 <= 600 && adcVal3 <= 600){
+                    curState = forward;
+                }
                 break;
             case findLine:
-                RIGHTWHEEL = 0;
-                LEFTWHEEL = 0;
-                curState = scan;
+                checkSensor();
+                if(adcVal1 <= 600){
+                    LEFTWHEEL = 500;
+                    RIGHTWHEEL = 0;
+                }
+                else if(adcVal4 <= 600){
+                    RIGHTWHEEL = 500;
+                    LEFTWHEEL = 0;
+                }
+                else{
+                    RIGHTWHEEL = 500;
+                    LEFTWHEEL = 500;
+                }
+                if(adcVal2 <= 600 && adcVal3 <= 600 && adcVal1 > 600 && adcVal4 > 600){
+                    curState = forward;
+                }
+                
                 break;
             default:
                 curState = idle;

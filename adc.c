@@ -9,7 +9,7 @@ void initADC(){
     AD1CON1bits.ASAM = 0; //Sampling when samp bit is set
     AD1CON2bits.VCFG = 0;
     AD1CON2bits.CSCNA = 1;
-    AD1CON2bits.SMPI = 15; //Amount of buffers
+    AD1CON2bits.SMPI = 3; //Amount of buffers
     AD1CON2bits.ALTS = 0;
     AD1CON3bits.ADRC = 0;
     AD1CON3bits.SAMC = 1;
