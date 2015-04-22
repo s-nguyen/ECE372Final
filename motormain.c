@@ -20,7 +20,8 @@ _CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & O
 // ******************************************************************************************* //
 // ******************************************************************************************* //
 typedef enum stateTypeEnum{
-    forward, idle, backward, keepRunning, turnAround, rightTurn
+    forward, idle, backward, keepRunning, turnAround, rightTurn, 
+            scan, check, moveForward, moveRight, moveLeft, findLine
 } stateType;
 
 volatile stateType curState = idle;
@@ -50,96 +51,55 @@ int main(void)
                 PIN4 = 0;
                 PIN5 = 19;
                 PIN7 = 18;
-                curState = keepRunning;
+                curState = scan;
                 //curState = keepRunning;
                 break;
-
-          /*  case backward:
-                //Change direction here
-                PIN5 = 0; //0 for NULL not used
-                PIN7 = 0; 
-                PIN6 = 18; //Pin 6 is maped to OC1 control left wheel
-                PIN4 = 19; //Pin 4 is mapped to OC2 Control Right wheel
-                curState = keepRunning;
-                break;
-            case turnAround:
-                PIN4 = 19;
-                PIN5 = 0;
-                PIN6 = 0;
-                PIN7 = 18;
-                RIGHTWHEEL = 500;
-                LEFTWHEEL = 500;
-                T1CONbits.TON = 1;
-
-                if (timerCount == 10){
-                    T1CONbits.TON = 0;
-                    timerCount = 0;
-                    curState = idle; //just for testing: should be forward
-                }
-                break;
-            case rightTurn:
-                RIGHTWHEEL = 0;
-                LEFTWHEEL = 1023;
-                T1CONbits.TON = 1;
-
-                if (timerCount == 5){
-                    T1CONbits.TON = 0;
-                    timerCount = 0;
-                    curState = idle; //just for testing: should be forward
-                }
-                break;*/
             case idle:
                 //Do nothing State
                 LEFTWHEEL = 0;
                 RIGHTWHEEL = 0;
                 nextState = forward;
                 break;
-            case keepRunning:
+            case scan:
                 //All Detect
-               /* if (adcVal1 < 650 && adcVal2 < 650 && adcVal3 < 650 && adcVal4 < 650){
-                    curState = turnAround;
-                }*/
-                //Middle Two are On Line
-                RIGHTWHEEL = adcVal2;
-                LEFTWHEEL = adcVal3;
-//                if (adcVal2 < 650 && adcVal3 < 650){
-//                    //Go Striaght
-//                    RIGHTWHEEL = 1000;
-//                    LEFTWHEEL = 1000;
-//                }
-//                else if(adcVal2 > 650 && adcVal3 < 650){
-//                    LEFTWHEEL = 1000;
-//                    RIGHTWHEEL = 0;
-//                }
-//                else if(adcVal3 > 650  && adcVal2 < 650){
-//                    LEFTWHEEL = 0;
-//                    RIGHTWHEEL = 1000;
-//                }
-//                else{
-//                    RIGHTWHEEL = 0;
-//                    LEFTWHEEL = 0;
-//                }
-                //2 Detects but 3 doesn't
-//                else if (adcVal3 > 700){
-//                    RIGHTWHEEL = 900;
-//                    LEFTWHEEL = 1000;
-//                }
-//                //3 Detects but 2 doesn't
-//                else if (adcVal2 > 700){
-//                    RIGHTWHEEL = 1000;
-//                    LEFTWHEEL = 900;
-//                }
-//                else if (adcVal1 < 650){
-//                    //ignore Left turn for now
-//                }
-//                else if (adcVal4 < 650){
-//                    curState = rightTurn;
-//                }
-//                else{
-//                    curState = backward; //Default to go backwards to find line
-//                    LEFTWHEEL = 500;   //Middle should have both on max
-//                    RIGHTWHEEL = 500;
-//                }
+                AD1CON1bits.SAMP = 1;
+                if(AD1CON1bits.DONE == 1){
+                    curState = check;
+                }
+                break;
+            case check:
+                if(adcVal2 <= 600 && adcVal3 <= 600){
+                    curState = moveForward;
+                }
+                else if(adcVal2 > 600 && adcVal3 <=600){
+                    curState = moveLeft;
+                }
+                else if(adcVal3 > 600 && adcVal2 <= 600){
+                    curState = moveRight;
+                }
+                else{
+                    curState = findLine;
+                }
+                break;
+            case moveForward:
+                RIGHTWHEEL = 1000;
+                LEFTWHEEL = 1000;
+                curState = scan;
+                break;
+            case moveRight:
+                RIGHTWHEEL = 0;
+                LEFTWHEEL = 1000;
+                curState = scan;
+                break;
+            case moveLeft:
+                RIGHTWHEEL = 1000;
+                LEFTWHEEL = 0;
+                curState = scan;
+                break;
+            case findLine:
+                RIGHTWHEEL = 300;
+                LEFTWHEEL = 300;
+                curState = scan;
                 break;
             default:
                 curState = idle;
@@ -157,6 +117,7 @@ void _ISR _ADC1Interrupt(void){
     adcVal2 = ADC1BUF1;
     adcVal3 = ADC1BUF2;
     adcVal4 = ADC1BUF3;
+    AD1CON1bits.SAMP = 0;
 //    int i = 0;
 //    adcVal1 = 0;
 //    adcVal2 = 0;

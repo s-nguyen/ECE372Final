@@ -6,7 +6,7 @@ void initADC(){
     AD1PCFG = 0x0000;
     AD1CON1bits.FORM = 0;
     AD1CON1bits.SSRC = 7;
-    AD1CON1bits.ASAM = 1;
+    AD1CON1bits.ASAM = 0; //Sampling when samp bit is set
     AD1CON2bits.VCFG = 0;
     AD1CON2bits.CSCNA = 1;
     AD1CON2bits.SMPI = 15; //Amount of buffers
