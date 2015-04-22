@@ -12,6 +12,7 @@
 #include "adc.h"
 #include "pwm.h"
 #include "timer.h"
+#include "supportFunctions.h"
 
 _CONFIG1( JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & COE_ON & ICS_PGx1 &
     FWDTEN_OFF & WINDIS_OFF & FWPSA_PR128 & WDTPS_PS32768 )
