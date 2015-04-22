@@ -20,7 +20,7 @@ _CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & O
 // ******************************************************************************************* //
 // ******************************************************************************************* //
 typedef enum stateTypeEnum{
-    forward, idle, backward, keepRunning, turnAround, rightTurn, 
+    forward, idle, 
             scan, check, moveForward, moveRight, moveLeft, findLine
 } stateType;
 
@@ -45,6 +45,12 @@ int main(void)
     while(1){
       
         switch(curState){
+            case idle:
+                //Do nothing State
+                LEFTWHEEL = 0;
+                RIGHTWHEEL = 0;
+                nextState = forward;
+                break;
             case forward:
                 //Change direct here
                 PIN6 = 0;
@@ -53,13 +59,7 @@ int main(void)
                 PIN7 = 18;
                 curState = scan;
                 //curState = keepRunning;
-                break;
-            case idle:
-                //Do nothing State
-                LEFTWHEEL = 0;
-                RIGHTWHEEL = 0;
-                nextState = forward;
-                break;
+                break;         
             case scan:
                 //All Detect
                 AD1CON1bits.SAMP = 1;
@@ -72,14 +72,14 @@ int main(void)
                     curState = moveForward;
                 }
                 else if(adcVal2 > 600 && adcVal3 <=600){
-                    curState = moveLeft;
-                }
-                else if(adcVal3 > 600 && adcVal2 <= 600){
                     curState = moveRight;
                 }
-                else{
+                else if(adcVal3 > 600 && adcVal2 <= 600){
+                    curState = moveLeft;
+                }else {
                     curState = findLine;
                 }
+                
                 break;
             case moveForward:
                 RIGHTWHEEL = 1000;
@@ -88,23 +88,22 @@ int main(void)
                 break;
             case moveRight:
                 RIGHTWHEEL = 0;
-                LEFTWHEEL = 1000;
+                LEFTWHEEL = 800;
                 curState = scan;
                 break;
             case moveLeft:
-                RIGHTWHEEL = 1000;
+                RIGHTWHEEL = 800;
                 LEFTWHEEL = 0;
                 curState = scan;
                 break;
             case findLine:
-                RIGHTWHEEL = 300;
-                LEFTWHEEL = 300;
+                RIGHTWHEEL = 0;
+                LEFTWHEEL = 0;
                 curState = scan;
                 break;
             default:
                 curState = idle;
                 break;
-
         }
     }
     return 0;
