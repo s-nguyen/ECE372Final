@@ -51,8 +51,7 @@ int main(void)
             case idle:
                 //Do nothing State
                 LEFTWHEEL = 0;
-                RIGHTWHEEL = 0;
-                prevState = idle;
+                RIGHTWHEEL =0;
                 nextState = forward;
                 break;
             case forward:
