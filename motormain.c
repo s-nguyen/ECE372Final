@@ -78,10 +78,15 @@ int main(void)
                 }
                 break;
             case check:
-                if (adcVal1 <= 600 && adcVal2 <= 600 && adcVal3 <= 600 && adcVal4 <= 600 && didTurnAround == 0){ //All detecting
+                if ((adcVal1 <= 600 && adcVal2 <= 600 && adcVal3 <= 600 && adcVal4 <= 600)){ //All detecting
                     delay = 1;
-                    didTurnAround = 1;
-                    curState = changeTires;
+                    if(didTurnAround == 0){
+                        didTurnAround = 1;
+                        curState = changeTires;
+                    }
+                    else{
+                        curState = findLine;
+                    }
                 }
 
                 else if(adcVal2 <= 600 && adcVal3 <= 600){
@@ -98,17 +103,17 @@ int main(void)
                 }
                 break;
             case moveForward:
-                RIGHTWHEEL = 500; //1000;
-                LEFTWHEEL = 500; //1000;
+                RIGHTWHEEL = 700; //1000;
+                LEFTWHEEL = 700; //1000;
                 curState = forward;
                 break;
             case moveRight:
                 RIGHTWHEEL = 0; //500
-                LEFTWHEEL = 500;  //1000
+                LEFTWHEEL = 700;  //1000
                 curState = forward;
                 break;
             case moveLeft:
-                RIGHTWHEEL = 500; //800
+                RIGHTWHEEL = 700; //800
                 LEFTWHEEL = 0;  //500
                 curState = forward;
                 break;
@@ -120,28 +125,37 @@ int main(void)
                     delayS(1);
                     delay = 0;
                 }
-                checkSensor();
-                if(adcVal2 <= 600 && adcVal3 <= 600){
+                AD1CON1bits.SAMP = 1;
+                if(AD1CON1bits.DONE == 1){
+                    if(adcVal2 <= 600 && adcVal3 <= 600 && adcVal1 > 600 && adcVal4 > 600){
                     curState = forward;
+                    }
                 }
+                
                 break;
             case findLine:
-                checkSensor();
-                if(adcVal1 <= 600){
-                    LEFTWHEEL = 500;
-                    RIGHTWHEEL = 0;
-                }
-                else if(adcVal4 <= 600){
-                    RIGHTWHEEL = 500;
-                    LEFTWHEEL = 0;
-                }
-                else{
-                    RIGHTWHEEL = 500;
-                    LEFTWHEEL = 500;
-                }
-                if(adcVal2 <= 600 && adcVal3 <= 600 && adcVal1 > 600 && adcVal4 > 600){
+                 AD1CON1bits.SAMP = 1;
+                 if(AD1CON1bits.DONE == 1){
+                    if(adcVal2 <= 600 && adcVal3 <= 600){
                     curState = forward;
-                }
+                    }
+                    else if(adcVal1 <= 600 && adcVal4 > 600){
+                        LEFTWHEEL = 0;
+                        RIGHTWHEEL = 700;
+                    }
+                    else if(adcVal4 <= 600 && adcVal1 > 600){
+                        RIGHTWHEEL = 0;
+                        LEFTWHEEL = 700;
+                    }
+                    else if(adcVal1 <= 600 && adcVal4 <= 600){
+                        LEFTWHEEL = 1000;
+                        RIGHTWHEEL = 0;
+                    }
+                    else{
+                        RIGHTWHEEL = 700;
+                        LEFTWHEEL = 700;
+                    }
+                }   
                 break;
             default:
                 curState = idle;
