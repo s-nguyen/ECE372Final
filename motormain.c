@@ -118,8 +118,8 @@ int main(void)
                 curState = forward;
                 break;
             case turnAround:
-                RIGHTWHEEL = 500; //1000
-                LEFTWHEEL = 500;
+                RIGHTWHEEL = 600; //1000
+                LEFTWHEEL = 600;
                 //Can add in function
                 if(delay == 1){
                     delayS(1);
