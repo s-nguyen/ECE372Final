@@ -39,7 +39,6 @@ int main(void)
     initPWM();
     initADC();
     initSW();
-    initTimer1();
 
     //Enable ON the H-bridge
     ENABLEPIN = OUTPUT;
@@ -143,7 +142,6 @@ int main(void)
                 if(adcVal2 <= 600 && adcVal3 <= 600 && adcVal1 > 600 && adcVal4 > 600){
                     curState = forward;
                 }
-                
                 break;
             default:
                 curState = idle;
@@ -184,10 +182,3 @@ void _ISR _CNInterrupt(void){
 }
 
 // ******************************************************************************************* //
-
-void _ISR _T1Interrupt(void){
-    //Put down the timer 1 flag first!
-    IFS0bits.T1IF = 0;
-    timerCount = timerCount + 1;
-
-}
