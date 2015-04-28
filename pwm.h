@@ -10,8 +10,8 @@
 
 #define PIN4 RPOR0bits.RP0R
 #define PIN5 RPOR0bits.RP1R
-#define PIN6 RPOR1bits.RP2R
-#define PIN7 RPOR1bits.RP3R
+#define PIN6 RPOR4bits.RP8R
+#define PIN7 RPOR4bits.RP9R
 
 #define LEFTWHEEL OC2RS
 #define RIGHTWHEEL OC1RS
