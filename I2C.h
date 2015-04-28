@@ -1,4 +1,4 @@
-/* 
+/*  //branch
  * File:   I2C.h
  * Author: Stephen
  *
@@ -9,8 +9,13 @@
 #define	I2C_H
 
 void initI2C();
-char readByte(char address);
+unsigned char readByte(char address);
 void writeByte(char data, char address);
-
+void beginTransmission(char saddress);
+void send(char address);
+void endTransmission();
+void requestFrom(char saddress);
+void masterACK();
+void checkIdle();
 #endif	/* I2C_H */
 

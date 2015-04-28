@@ -1,5 +1,7 @@
 #include "p24FJ64GA002.h"
 #include "lcd.h"
+#include "I2C.h"
+#include "timer.h"
 #define WRITE 0
 #define READ 1
 
@@ -19,80 +21,88 @@ void initI2C(){
     I2C2CONbits.I2CEN = 1; //Enable Bit
 
     IFS3bits.MI2C2IF = 0;
-    I2C2BRG = 144;
+    I2C2BRG = 145;
     
     
 }
 
 void writeByte(char reg, char data){
-    I2C2CONbits.SEN = 1; //Start bit
-    while(IFS3bits.MI2C2IF == 0);
-    IFS3bits.MI2C2IF = 0; //wait
-
-    I2C2TRN = VCNL4000_ADDRESS << 1 | WRITE;
-    while(I2C2STATbits.TRSTAT == 1);
+    beginTransmission(VCNL4000_ADDRESS);
     if(I2C2STATbits.ACKSTAT == 0){
-        I2C2TRN = reg;
-        while(I2C2STATbits.TRSTAT == 1);
+        send(reg);
     }
-
     if(I2C2STATbits.ACKSTAT == 0){
-        I2C2TRN = data;
-        while(I2C2STATbits.TRSTAT == 1);
+        send(data);
     }
-
-    if(I2C2STATbits.ACKSTAT == 0){
-        I2C2CONbits.PEN = 1;    //Stop
-        while(IFS3bits.MI2C2IF == 0);     //wait
-        IFS3bits.MI2C2IF = 0;
-    }
-    
-    
+    endTransmission();
+   
 }
 
-char readByte(char reg){
+unsigned char readByte(char reg){
     char c;
 
-    I2C2CONbits.SEN = 1; //Start bit
-    while(IFS3bits.MI2C2IF == 0);
-    IFS3bits.MI2C2IF = 0;
-    
-    I2C2TRN = VCNL4000_ADDRESS << 1 | WRITE; //Send Slave address //Start transmitting when somethign is inserted
-    while(I2C2STATbits.TRSTAT == 1); //Wait for address to be sent
-    if(I2C2STATbits.ACKSTAT == 0){ // wait for ack
-        I2C2TRN = reg;
-        while(I2C2STATbits.TRSTAT == 1);
-    }
-    
+    beginTransmission(VCNL4000_ADDRESS);
     if(I2C2STATbits.ACKSTAT == 0){
-        I2C2CONbits.PEN = 1;    //Stop
-        while(IFS3bits.MI2C2IF == 0);     //wait
-        IFS3bits.MI2C2IF = 0;
+        send(reg);
     }
-
-
-    
-
-    I2C2CONbits.SEN = 1; //Start bit
-    while(IFS3bits.MI2C2IF == 0);
-    IFS3bits.MI2C2IF = 0;
-
-    I2C2TRN = VCNL4000_ADDRESS << 1 | READ; // Slave address
-    while(I2C2STATbits.TRSTAT == 1); //Wait for address to be sent
-    if(I2C2STATbits.ACKSTAT == 0){ // wait for ack
+    if(I2C2STATbits.ACKSTAT == 0){
+        endTransmission();
+    }
+    requestFrom(VCNL4000_ADDRESS);
+    if(I2C2STATbits.ACKSTAT == 0){
+        I2C2CONbits.RCEN = 1;
+        //while(I2C2CONbits.RCEN);
         while(I2C2STATbits.RBF == 0);
         c = I2C2RCV;
     }
-    
+    masterACK();
+    endTransmission();
 
-    I2C2CONbits.ACKDT = 0;
+    return c;
+}
+
+//Start writing data
+ void beginTransmission(char saddress){
+    //Start bit
+    I2C2CONbits.SEN = 1;
+    while(I2C2CONbits.SEN);
+
+
+    //SlaveAddress
+    I2C2TRN = saddress << 1 | WRITE;
+    while(I2C2STATbits.TRSTAT == 1); //Wait for address to be sent
+}
+
+ void send(char address){
+    I2C2TRN = address; //Send Slave address //Start transmitting when somethign is inserted
+    while(I2C2STATbits.TRSTAT == 1); //Wait for address to be sent
+ }
+
+ void endTransmission(){
+     I2C2CONbits.PEN = 1;    //Stop
+     while(I2C2CONbits.PEN);
+      delayUs(900);
+ }
+
+void requestFrom(char saddress){
+     //Start bit
+    I2C2CONbits.SEN = 1;
+    while(I2C2CONbits.SEN);
+//    while(IFS3bits.MI2C2IF == 0);
+//    IFS3bits.MI2C2IF = 0;
+
+    I2C2TRN = saddress << 1 | READ;
+    while(I2C2STATbits.TRSTAT == 1); //Wait for address to be sent
+ }
+
+void masterACK(){
+    I2C2CONbits.ACKDT = 1;
     I2C2CONbits.ACKEN = 1;
     while(IFS3bits.MI2C2IF == 0);
     IFS3bits.MI2C2IF = 0;
+}
 
-    I2C2CONbits.PEN = 1;    //Stop
-    while(IFS3bits.MI2C2IF == 0);     //wait
-    IFS3bits.MI2C2IF = 0;
-
-    return c;
+void checkIdle(){
+    while(I2C2CONbits.SEN  && I2C2CONbits.RSEN && I2C2CONbits.PEN && I2C2CONbits.RCEN && I2C2CONbits.ACKEN 
+            && I2C2STATbits.TRSTAT );
 }

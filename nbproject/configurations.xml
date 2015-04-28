@@ -7,6 +7,8 @@
       <itemPath>adc.h</itemPath>
       <itemPath>pwm.h</itemPath>
       <itemPath>timer.h</itemPath>
+      <itemPath>I2C.h</itemPath>
+      <itemPath>VCNL4000.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -19,6 +21,8 @@
       <itemPath>pwm.c</itemPath>
       <itemPath>timer.c</itemPath>
       <itemPath>motormain.c</itemPath>
+      <itemPath>I2C.c</itemPath>
+      <itemPath>VCNL4000.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -36,7 +40,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.24</languageToolchainVersion>
+        <languageToolchainVersion>1.23</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -103,6 +107,8 @@
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>
       </C30-AR>
+      <C30-AS>
+      </C30-AS>
       <C30-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="boot-eeprom" value="no_eeprom"/>

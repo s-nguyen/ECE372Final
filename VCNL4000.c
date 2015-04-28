@@ -1,5 +1,7 @@
 #include "p24fj64ga002.h"
 #include "I2C.h"
+#include "timer.h"
+
 
 #define VCNL4000_ADDRESS 0x13  // 0x26 write, 0x27 read
 
@@ -18,19 +20,19 @@
 void initVNCL4000(){
     writeByte(AMBIENT_PARAMETER, 0x0F); //Single conversion mode, 128 average
     writeByte(IR_CURRENT, 20); // Set IR current to 200mA
-    writeByte(PROXIMITY_FREQ, 2); // 781.25kHz
+    writeByte(PROXIMITY_FREQ, 3); // 390k Hz
     writeByte(PROXIMITY_MOD, 0x81); // 129
+    delayUs(900);
 }
 
 unsigned int readProximity(){
-    unsigned int data;
-    char temp;
+    unsigned int data = 0;
+    unsigned char temp;
 
-    temp = readByte(COMMAND_0);
-    writeByte(COMMAND_0, temp | 0x08); // command the sensor to perform prxomity measure
+    temp = readByte(COMMAND_0); 
+    writeByte(COMMAND_0, 0b10001000/* temp | 0x08*/); // command the sensor to perform prxomity measure
 
-    while(!(readByte(COMMAND_0)&0x20)); // wait for prxomity data ready bit ot be set
-
+    while(!(readByte(COMMAND_0)&0b00100000) /*0x20*/); // wait for prxomity data ready bit ot be set
     data = readByte(PROXIMITY_RESULT_MSB) << 8;
     data |= readByte(PROXIMITY_RESULT_LSB);
 
@@ -39,12 +41,12 @@ unsigned int readProximity(){
 
 unsigned int readAmbient(){
     unsigned int data;
-    char temp;
+    unsigned char temp;
 
     temp = readByte(COMMAND_0);
-    writeByte(COMMAND_0, temp | 0x10); // command the sensor to perform ambient measure
+    writeByte(COMMAND_0, 0b10010000 /*temp | 0x10*/); // command the sensor to perform ambient measure
 
-    while(!(readByte(COMMAND_0)&0x40)); // wait for the prxomity data ready bit to be set
+    while(!(readByte(COMMAND_0)&0b01000000) /*0x20*/); // wait for the proxmity data ready bit to be set
     data = readByte(AMBIENT_RESULT_MSB) << 8;
     data |= readByte(AMBIENT_RESULT_LSB);
 
