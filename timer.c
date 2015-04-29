@@ -58,6 +58,26 @@ void delay5ms(){
     T2CONbits.TON = 0;
 }
 
+void delayMs(int m){
+    TMR2 = 0;
+    PR2 = (FCY*.001)/PRESCALE - 1;
+    IFS0bits.T2IF = 0;
+    T2CONbits.TCKPS = 0b01;
+    T2CONbits.TON = 1;
+    while(m != 0){
+        while(IFS0bits.T2IF == 0){
+        //Do nothing
+        }
+        IFS0bits.T2IF = 0;
+        m = m - 1;
+    }
+
+    T2CONbits.TON = 0;
+
+
+}
+
+
 //Turns a integer into miliseconds, seconds and minutes
 //Str is the pass in Array that is preallocated to 9 spots to be filled
 void getTimedString(int watch, char* str){

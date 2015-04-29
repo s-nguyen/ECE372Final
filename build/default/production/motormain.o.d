@@ -3,4 +3,6 @@ motormain.c  \
 adc.h  \
 pwm.h  \
 timer.h  \
- supportFunctions.h 
+ VCNL4000.h  \
+I2C.h  \
+supportFunctions.h 

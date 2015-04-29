@@ -12,9 +12,11 @@
 #include "adc.h"
 #include "pwm.h"
 #include "timer.h"
+#include "VCNL4000.h"
+#include "I2C.h"
 #include "supportFunctions.h"
 
-#define PROXIMITY_THRESHOLD 45,000
+#define PROXIMITY_THRESHOLD 2270
 
 _CONFIG1( JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & COE_ON & ICS_PGx1 &
     FWDTEN_OFF & WINDIS_OFF & FWPSA_PR128 & WDTPS_PS32768 )
@@ -37,15 +39,21 @@ volatile int adcVal1, adcVal2, adcVal3, adcVal4 = 0;
 int main(void)
 {
     int delay = 0;
+    int f; 
+    int goAroundCount = 0;
+    unsigned int test = 0;
     int didTurnAround = 0;
     initPWM();
     initADC();
     initSW();
+    initI2C();
+    initVNCL4000();
 
     //Enable ON the H-bridge
     ENABLEPIN = OUTPUT;
     ENABLE = 1;
-
+    TRISBbits.TRISB8 = 0;
+    TRISBbits.TRISB9 = 0;
     while(1){
       
         switch(curState){
@@ -80,11 +88,13 @@ int main(void)
                 }
                 break;
             case check:
-                if (readProximity() >= PROXIMITY_THRESHOLD){
-                    curState = goAround;
+                test = readProximity();
+
+                if (test >= PROXIMITY_THRESHOLD){
+                  curState = goAround;
                 }
 
-                if ((adcVal1 <= 600 && adcVal2 <= 600 && adcVal3 <= 600 && adcVal4 <= 600)){ //All detecting
+                else if ((adcVal1 <= 600 && adcVal2 <= 600 && adcVal3 <= 600 && adcVal4 <= 600)){ //All detecting
                     delay = 1;
                     if(didTurnAround == 0){
                         didTurnAround = 1;
@@ -109,17 +119,17 @@ int main(void)
                 }
                 break;
             case moveForward:
-                RIGHTWHEEL = 700; //1000;
-                LEFTWHEEL = 700; //1000;
+                RIGHTWHEEL = 600; //1000;
+                LEFTWHEEL = 600; //1000;
                 curState = forward;
                 break;
             case moveRight:
                 RIGHTWHEEL = 0; //500
-                LEFTWHEEL = 700;  //1000
+                LEFTWHEEL = 600;  //1000
                 curState = forward;
                 break;
             case moveLeft:
-                RIGHTWHEEL = 700; //800
+                RIGHTWHEEL = 600; //800
                 LEFTWHEEL = 0;  //500
                 curState = forward;
                 break;
@@ -140,21 +150,30 @@ int main(void)
                 
                 break;
             case goAround:
-                LEFTWHEEL = 800;
-                RIGHTWHEEL = 0;
-                delayS(1);
-                LEFTWHEEL = 400;
-                RIGHTWHEEL = 800;
+                if (goAroundCount == 0){
+                    LEFTWHEEL = 500;
+                    RIGHTWHEEL = 800;
+                    delayMs(500);
+                    goAroundCount = 1;
+                }
+                else{
+                    LEFTWHEEL = 800;
+                    RIGHTWHEEL = 500;
+                }
+                AD1CON1bits.SAMP = 1;
+                if(AD1CON1bits.DONE == 1){
+                    if (adcVal2 <= 600 && adcVal3 <= 600){
+                        curState = findLine;
+                    }
+                    else {
+                        curState = goAround;
+                    }
+                }
 
-                if (adcVal2 <= 600 && adcVal3 <= 600){
-                    curState = findLine;
-                }
-                else {
-                    curState = goAround;
-                }
                 break;
                 
             case findLine:
+                goAroundCount = 0;
                  AD1CON1bits.SAMP = 1;
                  if(AD1CON1bits.DONE == 1){
                     if(adcVal2 <= 600 && adcVal3 <= 600){

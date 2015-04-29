@@ -14,7 +14,8 @@ void initPWM(){
 
     OC1CONbits.OCM = 6; //PWM mode on OCx,Fault pin disabled
     OC2CONbits.OCM = 6;
-    
+
+    PIN7 = 0;
     PIN6 = 18; //Pin 6 is maped to OC1 control left wheel
     PIN4 = 19; //Pin 4 is mapped to OC2 Control Right wheel
     
