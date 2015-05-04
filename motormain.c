@@ -151,14 +151,14 @@ int main(void)
                 break;
             case goAround:
                 if (goAroundCount == 0){
-                    LEFTWHEEL = 500;
-                    RIGHTWHEEL = 800;
+                    LEFTWHEEL = 400;
+                    RIGHTWHEEL = 600;
                     delayMs(500);
                     goAroundCount = 1;
                 }
                 else{
-                    LEFTWHEEL = 800;
-                    RIGHTWHEEL = 500;
+                    LEFTWHEEL = 600;
+                    RIGHTWHEEL = 400;
                 }
                 AD1CON1bits.SAMP = 1;
                 if(AD1CON1bits.DONE == 1){
