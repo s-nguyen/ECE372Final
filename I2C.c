@@ -7,10 +7,8 @@
 
 #define VCNL4000_ADDRESS 0x13  // 0x26 write, 0x27 read
 
-
-
 void initI2C(){
-    TRISBbits.TRISB2 = 0;
+    TRISBbits.TRISB2 = 0; //Sets those two I2C pins to output
     TRISBbits.TRISB3 = 0;
     AD1PCFGbits.PCFG4 = 1; //Configure those Pin to be digital
     AD1PCFGbits.PCFG5 = 1;
@@ -20,24 +18,24 @@ void initI2C(){
     I2C2CONbits.A10M = 0; //7 bit slave address
     I2C2CONbits.I2CEN = 1; //Enable Bit
 
-    IFS3bits.MI2C2IF = 0;
+    IFS3bits.MI2C2IF = 0; //Set the I2c interupt flag to 0
     I2C2BRG = 145;
     
     
 }
 
 void writeByte(char reg, char data){
-    beginTransmission(VCNL4000_ADDRESS);
+    beginTransmission(VCNL4000_ADDRESS); //Start Bit and slave address
     if(I2C2STATbits.ACKSTAT == 0){
-        send(reg);
+        send(reg); //Sends Data to the device
     }
     if(I2C2STATbits.ACKSTAT == 0){
         send(data);
     }
-    endTransmission();
+    endTransmission(); //Outputs the stop bits
    
 }
-
+//Read Data from I2C device
 unsigned char readByte(char reg){
     char c;
 
@@ -84,6 +82,7 @@ unsigned char readByte(char reg){
       delayUs(900);
  }
 
+ //Starts the procedure to get information from the specefic sensor
 void requestFrom(char saddress){
      //Start bit
     I2C2CONbits.SEN = 1;
@@ -95,6 +94,7 @@ void requestFrom(char saddress){
     while(I2C2STATbits.TRSTAT == 1); //Wait for address to be sent
  }
 
+//Master Acknowledgement
 void masterACK(){
     I2C2CONbits.ACKDT = 1;
     I2C2CONbits.ACKEN = 1;
@@ -102,7 +102,7 @@ void masterACK(){
     IFS3bits.MI2C2IF = 0;
 }
 
-void checkIdle(){
+void checkIdle(){ //Checks if both master and slave are doing nothing
     while(I2C2CONbits.SEN  && I2C2CONbits.RSEN && I2C2CONbits.PEN && I2C2CONbits.RCEN && I2C2CONbits.ACKEN 
             && I2C2STATbits.TRSTAT );
 }

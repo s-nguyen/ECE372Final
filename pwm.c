@@ -4,6 +4,9 @@
 
 void initPWM(){
 
+    TRISBbits.TRISB8 = 0; //Set Two of the PWM pins to be outputs
+    TRISBbits.TRISB9 = 0;
+    
     T3CONbits.TCKPS = 0; //Fixed
     TMR3 = 0;
     PR3 = 1000; //Timing is not important?
